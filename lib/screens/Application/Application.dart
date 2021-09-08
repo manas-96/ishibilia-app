@@ -17,7 +17,7 @@ class Application extends StatefulWidget {
 
 class _ApplicationState extends State<Application> {
 
-
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   var sponsorCompany= {
   "id": null,
   "application_form_id": null,
@@ -45,9 +45,9 @@ class _ApplicationState extends State<Application> {
   var pointOfContact={
     "id": null,
     "application_form_id": null,
-    "name": "Wells and Hebert Trading",
-    "email": "ditubarowu@mailinator.com",
-    "mobile": "Humphrey Cash Traders",
+    "name": "",
+    "email": "",
+    "mobile": "",
     "created_at": "2021-06-13T14:41:02.000000Z",
     "updated_at": "2021-06-13T14:41:02.000000Z"
   };
@@ -119,16 +119,20 @@ class _ApplicationState extends State<Application> {
   };
   String moveIn="";
   String lastPeriod="";
-  bool information=false;
-
-  bool checkData=false;
+  bool information=true;
+  bool one=true;
+  bool two=true;
+  bool three=true;
+  bool checkData=true;
   var data;
   getApplication()async{
     final result = await APIClient().getApplication();
+    print("result");
+    print(result);
     if(result=="failed"){
       if(mounted){
         setState(() {
-          checkData=true;
+          checkData=false;
         });
       }
     }
@@ -143,7 +147,7 @@ class _ApplicationState extends State<Application> {
       if(result["status"]==0){
         if(mounted){
           setState(() {
-            checkData=true;
+            checkData=false;
           });
         }
       }
@@ -197,12 +201,13 @@ class _ApplicationState extends State<Application> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getCountry();
     getApplication();
+    getCountry();
+
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Scaffold(key: _scaffoldKey,
       appBar: AppBar(
         flexibleSpace: Container(
           decoration: BoxDecoration(
@@ -267,10 +272,11 @@ class _ApplicationState extends State<Application> {
                        child: Padding(
                          padding: const EdgeInsets.only(left: 8.0, right: 8),
                          child: TextFormField(
+                           controller: TextEditingController(text: data!=null?data["application_no"]:""),
+                           readOnly: true,
                            onChanged: (val){
 
                            },
-                           initialValue: "weew-485",
                            decoration: InputDecoration(
                              border: InputBorder.none
                            ),
@@ -291,10 +297,11 @@ class _ApplicationState extends State<Application> {
                        child: Padding(
                          padding: const EdgeInsets.only(left: 8.0, right: 8),
                          child: TextFormField(
+                           controller: TextEditingController(text: data!=null?data["application_no"]:""),
+                           readOnly: checkData,
                            onChanged: (val){
 
                            },
-                           initialValue: "Manas Saha",
                            decoration: InputDecoration(
                             // labelText: 'Name',
                                border: InputBorder.none
@@ -375,7 +382,8 @@ class _ApplicationState extends State<Application> {
                            onChanged: (val){
 
                            },
-                           initialValue: "64565469",
+                           controller: TextEditingController(text: data!=null?data["iqama"]:""),
+                           readOnly: checkData,
                            decoration: InputDecoration(
                              // labelText: 'Name',
                                border: InputBorder.none
@@ -400,7 +408,8 @@ class _ApplicationState extends State<Application> {
                            onChanged: (val){
 
                            },
-                           initialValue: "64565469",
+                           controller: TextEditingController(text: data!=null?data["passport_no"]:""),
+                           readOnly: checkData,
                            decoration: InputDecoration(
                              // labelText: 'Name',
                                border: InputBorder.none
@@ -425,7 +434,8 @@ class _ApplicationState extends State<Application> {
                            onChanged: (val){
 
                            },
-                           //initialValue: "64565469",
+                           controller: TextEditingController(text: data!=null?data["religion"]??"":""),
+                           readOnly: checkData,
                            decoration: InputDecoration(
                              // labelText: 'Name',
                                border: InputBorder.none
@@ -449,11 +459,14 @@ class _ApplicationState extends State<Application> {
                          padding: const EdgeInsets.only(left: 8.0, right: 8),
                          child: InkWell(
                            onTap: (){
-                             getImage();
+                             if(!checkData){
+                               getImage();
+                             }
+
                            },
                            child: Padding(
                              padding: const EdgeInsets.all(8.0),
-                             child: Text("Choose Image"),
+                             child: Text(data==null?"Choose Image":data["image"]),
                            ),
                          ),
                        ),
@@ -486,11 +499,13 @@ class _ApplicationState extends State<Application> {
                          padding: const EdgeInsets.only(left: 8.0, right: 8),
                          child: InkWell(
                            onTap: (){
-                             getPassport();
+                             if(!checkData){
+                               getPassport();
+                             }
                            },
                            child: Padding(
                              padding: const EdgeInsets.all(8.0),
-                             child: Text("Choose Image"),
+                             child: Text(data==null?"Choose Image":data["document_copy"]??""),
                            ),
                          ),
                        ),
@@ -536,6 +551,8 @@ class _ApplicationState extends State<Application> {
                             onChanged: (val){
 
                             },
+                            controller: TextEditingController(text: data!=null?data["tel_office"]??"":""),
+                            readOnly: checkData,
                             decoration: InputDecoration(
                                 border: InputBorder.none
                             ),
@@ -559,6 +576,8 @@ class _ApplicationState extends State<Application> {
                             onChanged: (val){
 
                             },
+                            controller: TextEditingController(text: data!=null?data["whatsapp_no"]??"":""),
+                            readOnly: checkData,
                             decoration: InputDecoration(
                                 border: InputBorder.none
                             ),
@@ -579,10 +598,11 @@ class _ApplicationState extends State<Application> {
                         child: Padding(
                           padding: const EdgeInsets.only(left: 8.0, right: 8),
                           child: TextFormField(
-                            initialValue: '6294535521',
                             onChanged: (val){
 
                             },
+                            controller: TextEditingController(text: data!=null?data["whatsapp_no"]??"":""),
+                            readOnly: checkData,
                             decoration: InputDecoration(
                                 border: InputBorder.none
                             ),
@@ -618,6 +638,8 @@ class _ApplicationState extends State<Application> {
                               onChanged: (val){
 
                               },
+                              controller: TextEditingController(text: data!=null?data["current_residence_tel"]??"":""),
+                              readOnly: checkData,
                               decoration: InputDecoration(
                                   border: InputBorder.none
                               ),
@@ -638,7 +660,6 @@ class _ApplicationState extends State<Application> {
                           child: Padding(
                             padding: const EdgeInsets.only(left: 8.0, right: 8),
                             child: TextFormField(
-                              initialValue: 'omisrivastava08@gmail.com',
                               onChanged: (val){
 
                               },
@@ -677,6 +698,8 @@ class _ApplicationState extends State<Application> {
                               onChanged: (val){
 
                               },
+                              controller: TextEditingController(text: data!=null?data["address"]??"":""),
+                              readOnly: checkData,
                               decoration: InputDecoration(
                                   border: InputBorder.none
                               ),
@@ -774,6 +797,8 @@ class _ApplicationState extends State<Application> {
                               onChanged: (val){
 
                               },
+                              controller: TextEditingController(text: data!=null?data["sponsor_company"]["name"]??"":""),
+                              readOnly: checkData,
                               decoration: InputDecoration(
                                   border: InputBorder.none
                               ),
@@ -794,7 +819,8 @@ class _ApplicationState extends State<Application> {
                           child: Padding(
                             padding: const EdgeInsets.only(left: 8.0, right: 8),
                             child: TextFormField(
-                              initialValue: 'Durgapur',
+                              controller: TextEditingController(text: data!=null?data["sponsor_company"]["address"]??"":""),
+                              readOnly: checkData,
                               onChanged: (val){
 
                               },
@@ -818,7 +844,8 @@ class _ApplicationState extends State<Application> {
                           child: Padding(
                             padding: const EdgeInsets.only(left: 8.0, right: 8),
                             child: TextFormField(
-                              initialValue: '876873544',
+                              controller: TextEditingController(text: data!=null?data["sponsor_company"]["phone"]??"":""),
+                              readOnly: checkData,
                               onChanged: (val){
 
                               },
@@ -857,6 +884,8 @@ class _ApplicationState extends State<Application> {
                               onChanged: (val){
 
                               },
+                              controller: TextEditingController(text: data!=null?data["point_of_contact"]["name"]??"":""),
+                              readOnly: checkData,
                               decoration: InputDecoration(
                                   border: InputBorder.none
                               ),
@@ -877,7 +906,8 @@ class _ApplicationState extends State<Application> {
                           child: Padding(
                             padding: const EdgeInsets.only(left: 8.0, right: 8),
                             child: TextFormField(
-                              initialValue: 'abc@gmail.com',
+                              controller: TextEditingController(text: data!=null?data["point_of_contact"]["email"]??"":""),
+                              readOnly: checkData,
                               onChanged: (val){
 
                               },
@@ -901,7 +931,8 @@ class _ApplicationState extends State<Application> {
                           child: Padding(
                             padding: const EdgeInsets.only(left: 8.0, right: 8),
                             child: TextFormField(
-                              initialValue: '876873544',
+                              controller: TextEditingController(text: data!=null?data["point_of_contact"]["mobile"]??"":""),
+                              readOnly: checkData,
                               onChanged: (val){
 
                               },
@@ -939,7 +970,8 @@ class _ApplicationState extends State<Application> {
                           child: Padding(
                             padding: const EdgeInsets.only(left: 8.0, right: 8),
                             child: TextFormField(
-                              initialValue: spouse["name"]??"",
+                              controller: TextEditingController(text: data!=null?data["spouse"]["name"]??"":""),
+                              readOnly: checkData,
                               onChanged: (val){
                                 spouse["name"]=val;
                               },
@@ -963,7 +995,8 @@ class _ApplicationState extends State<Application> {
                           child: Padding(
                             padding: const EdgeInsets.only(left: 8.0, right: 8),
                             child: TextFormField(
-                              initialValue: spouse["email"]??"",
+                              controller: TextEditingController(text: data!=null?data["spouse"]["email"]??"":""),
+                              readOnly: checkData,
                               onChanged: (val){
                                 spouse["email"]=val;
                               },
@@ -987,7 +1020,8 @@ class _ApplicationState extends State<Application> {
                           child: Padding(
                             padding: const EdgeInsets.only(left: 8.0, right: 8),
                             child: TextFormField(
-                              initialValue: spouse["mobile"]??"",
+                              controller: TextEditingController(text: data!=null?data["spouse"]["mobile"]??"":""),
+                              readOnly: checkData,
                               onChanged: (val){
                                 spouse["mobile"]=val;
                               },
@@ -1011,7 +1045,8 @@ class _ApplicationState extends State<Application> {
                           child: Padding(
                             padding: const EdgeInsets.only(left: 8.0, right: 8),
                             child: TextFormField(
-                              initialValue: spouse["nationality"]??"",
+                              controller: TextEditingController(text: data!=null?data["spouse"]["nationality"]??"":""),
+                              readOnly: checkData,
                               onChanged: (val){
                                 spouse["nationality"]=val;
                               },
@@ -1033,7 +1068,8 @@ class _ApplicationState extends State<Application> {
                               border: Border.all(color: Colors.black54)
                           ),
                           child: DateTimePicker(
-                            controller: TextEditingController(text: spouse["date_of_birth"]??""),
+                            controller: TextEditingController(text: data!=null?data["spouse"]["date_of_birth"]??"":""),
+                            readOnly: checkData,
                             type: DateTimePickerType.date,
                             dateMask: 'yyyy/MM/dd',
                             firstDate: DateTime(1980),
@@ -1061,7 +1097,8 @@ class _ApplicationState extends State<Application> {
                           child: Padding(
                             padding: const EdgeInsets.only(left: 8.0, right: 8),
                             child: TextFormField(
-                              initialValue: spouse["iqama"]??"",
+                              controller: TextEditingController(text: data!=null?data["spouse"]["iqama"]??"":""),
+                              readOnly: checkData,
                               onChanged: (val){
                                 spouse["iqama"]=val;
                               },
@@ -1086,13 +1123,16 @@ class _ApplicationState extends State<Application> {
                             padding: const EdgeInsets.only(left: 8.0, right: 8),
                             child: InkWell(
                               onTap: (){
-                                print("val");
-                                getSpouseImage();
+                                if(!checkData){
+                                  print("val");
+                                  getSpouseImage();
+                                }
                               },
                               child: Container(
+                                alignment: Alignment.centerLeft,
                                 height: 52,
                                 width: MediaQuery.of(context).size.width,
-                                child: Text(spouse["image"]??""),
+                                child: Text(data!=null?data["spouse"]["image"]??"":""),
                               ),
                             ),
                           ),
@@ -1112,13 +1152,16 @@ class _ApplicationState extends State<Application> {
                             padding: const EdgeInsets.only(left: 8.0, right: 8),
                             child: InkWell(
                               onTap: (){
-                                print("val");
-                                getSpouseIDocument();
+                                if(!checkData){
+                                  print("val");
+                                  getSpouseIDocument();
+                                }
                               },
                               child: Container(
+                                alignment: Alignment.centerLeft,
                                 height: 52,
                                 width: MediaQuery.of(context).size.width,
-                                child: Text(spouse["document_copy"]??""),
+                                child: Text(data!=null?data["spouse"]["document_copy"]??"":""),
                               ),
                             ),
                           ),
@@ -2032,6 +2075,75 @@ class _ApplicationState extends State<Application> {
               ),
 
             ),
+            SizedBox(height: 20,),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              color: Colors.white,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    CheckboxListTile(
+                        title: Text("I am aware of the speed limit on Ishbilia is "
+                " 20KPH (12 MPH) which I agree to follow at all times; I agree that violation of the speed "
+                     "limit may result in suspension of driving privileges on the compound and notification to my company.",textAlign: TextAlign.justify,),
+                        value: one,
+                        activeColor: Colors.blue,
+                        onChanged:(bool newValue){
+                          setState(() {
+
+                          });
+
+                        }),
+                    SizedBox(height: 8,),
+                    CheckboxListTile(
+                        title: Text(" I agree that failure to disclose, falsify or give misleading information relevant to this request for information may result in cancellation of my contract with Ishbilia.",textAlign: TextAlign.justify),
+                        value: two,
+                        activeColor: Colors.blue,
+                        onChanged:(bool newValue){
+                          setState(() {
+
+                          });
+
+                        }),
+                    SizedBox(height: 8,),
+                    CheckboxListTile(
+                        title: Text(" I agree to abide by the Rules and Regulations of Ishbilia Compound, which may be updated from time to time in the interests of the community. A copy of the Rules and Regulations is available on request.",textAlign: TextAlign.justify,),
+                        value: three,
+                        activeColor: Colors.blue,
+                        onChanged:(bool newValue){
+                          setState(() {
+
+                          });
+
+                        }),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 20,),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              alignment: Alignment.center,
+              child: RaisedButton(
+                color: textColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 25.0, right: 25, top: 15, bottom: 15),
+                  child: Text("Update",style: TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.bold),),
+                ),
+                onPressed: (){
+                  if(!checkData){
+                    Future.delayed(Duration(seconds: 1), () {
+                     _scaffoldKey.currentState.showSnackBar(APIClient.successToast("failed to save data"));
+                    });
+                  }
+                },
+              ),
+            ),
+            SizedBox(height: 20,),
 
           ],
         ),
